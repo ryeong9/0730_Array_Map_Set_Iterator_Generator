@@ -37,3 +37,36 @@ for (let seq of evenSeq) console.log(seq);
 // 홀수만 호출하는 제너레이터
 let oddSeq = Sequence(1, 20, 2);
 for (let seq of oddSeq) console.log(seq);
+
+class Sequence {
+  constructor(from = 0, to = Infinity, interval = 1) {
+    this.from = from;
+    this.to = to;
+    this.interval = interval;
+  }
+  *[Symbol.iterator]() {
+    let num = this.from;
+    while (num <= this.to) {
+      yield num;
+      num += this.interval;
+    }
+  }
+}
+
+// 짝수만 호출
+let evenNumbers = new Sequence(2, 10, 2); // 2부터 10까지 2 interval로
+for (const num of evenNumbers) {
+  console.log(num);
+}
+
+// function* generateIterables(...iterables) {
+//   for (let iterable of iterables) for (let item of iterable) yield item;
+// }
+
+function* generateIterables(...iterables) {
+  for (let iterable of iterables) yield* iterable;
+}
+let evenNumbers2 = new Sequence(2, 10, 2);
+let generator = generateIterables("abc", [1, 2, 3], evenNumbers2);
+let arr = [...generator];
+console.log(arr);
